@@ -595,11 +595,12 @@ function nextDataset(){
 		console.log("actual Dataset value: "+ actualDataset.TDSvalue);
 		console.log("actual Dataset picture: "+ actualDataset.TDSpicture);
 		writeGeotagToTrialDataSet(trialData.getTDlastProcessedDatasetElement());
-		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\"><\/div> <br\/>" +
-					"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
-						"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
+		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\" ><\/div> <br\/>" +
+					"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
+						"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
 								"<div class=\"ui-block-a\"><b>Wert:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"number\" name=\"value\" id=\"value\" placeholder=\"Wert\" value=\"" + actualDataset.TDSvalue +"\" data-mini=\"true\" onchange=\"saveValue()\"><\/div><br\/>";		
 		$("#actualDatasetGrid").html(x);
+		$('#value').focus();
 		
 		// Get image handle
 	      //
@@ -616,7 +617,7 @@ function nextDataset(){
 	      var actualPicture = actualDataset.TDSpicture;
 	      console.log("actualImage: " + actualPicture);
 	      if(actualPicture == null || actualPicture == undefined){
-	    	  actualPicture = "#";
+	    	  actualPicture = "img/logo.png";
 	      }
 	      
 	      console.log("actualImage after if: " + actualPicture);
@@ -670,11 +671,12 @@ function prevDataset(){
 		console.log("actual Dataset Type: "+ actualDataset.TDSattributeType);
 		console.log("actual Dataset value: "+ actualDataset.TDSvalue);
 		writeGeotagToTrialDataSet(trialData.getTDlastProcessedDatasetElement());	
-		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\"><\/div> <br\/>" +
-		"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
-			"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
+		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\"><\/div> <br\/>" +
+		"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
+			"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
 					"<div class=\"ui-block-a\"><b>Wert:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"number\" name=\"value\" id=\"value\" placeholder=\"Wert\" value=\"" + actualDataset.TDSvalue +"\" data-mini=\"true\" onchange=\"saveValue()\"><\/div><br\/>";		
 		$("#actualDatasetGrid").html(x);
+		$('#value').focus();
 		// Get image handle
 	      //
 	      var smallImage = document.getElementById('smallImage');
@@ -690,7 +692,7 @@ function prevDataset(){
 	      var actualPicture = actualDataset.TDSpicture;
 	      console.log("actualImage: " + actualPicture);
 	      if(actualPicture == null || actualPicture == undefined){
-	    	  actualPicture = "#";
+	    	  actualPicture = "img/logo.png";
 	      }
 	      
 	      console.log("actualImage after if: " + actualPicture);
@@ -970,6 +972,7 @@ function addImage(){
     	console.log("Cordova is ready! Cordova is ready!");
     	document.addEventListener("backbutton", onBackKeyDown, false);
     	
+    	
     	pictureSource=navigator.camera.PictureSourceType;
         destinationType=navigator.camera.DestinationType;
     	
@@ -1011,3 +1014,69 @@ function addImage(){
     		navigator.app.backHistory(); // Go back in history in any other case
     	}
     }
+    
+    function readFile(actualFile){
+    	var fileText ="";
+ 
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+        function gotFS(fileSystem) {
+            fileSystem.root.getFile(actualFile, null, gotFileEntry, fail);
+        }
+
+        function gotFileEntry(fileEntry) {
+            fileEntry.file(gotFile, fail);
+        }
+
+        function gotFile(file){
+          //  readDataUrl(file);
+            readAsText(file);
+        }
+
+        function readDataUrl(file) {
+            var reader = new FileReader();
+            reader.onloadend = function(evt) {
+                console.log("Read as data URL");
+                console.log(evt.target.result);
+                
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function readAsText(file) {
+        	
+            var reader = new FileReader();
+            reader.onloadend = function(evt) {
+                console.log("Read as text");
+                console.log(evt.target.result);
+                fileText = evt.target.result;
+                console.log("fileText:  "+fileText);
+                loadConfig();
+            };
+            reader.readAsText(file);
+        }
+
+        function fail(error) {
+            console.log(error.code);
+        }
+    
+    }
+    
+    function loadConfig(){
+    	
+    	var trialTitle = "";
+    	var trialID = "";
+    	var trialDate = "";
+    	var trialProtoclID = "";
+    	var trialInvestigator = "";
+    	var trialStudyDirector = "";
+    	var trialLocation = "";
+    	
+   
+    	//create trial
+    	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null);
+    	console.log("trial object created: " + trial);
+    	
+    }
+    
+ 

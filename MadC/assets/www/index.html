@@ -12,6 +12,10 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
 <!-- <link rel="stylesheet"  href="css/jqm-icon-pack-2.0-original.css" /> -->
 
+  
+  
+  
+
 <!-- Java scripts -->
 <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <!-- <script type="text/javascript" charset="utf-8" src="js/jquery-1.9.1.min.js"></script> -->
@@ -21,7 +25,8 @@
 <!-- <script type="text/javascript" charset="utf-8" src="js/index.js"></script> -->
 <script type="text/javascript" charset="utf-8" src="js/madc.js"></script>
 <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGmdyMaBpONOEoYlmgkXlQC0NNEAoC1pQ&sensor=true"></script>
-<script type="text/javascript" charset="utf-8" src="http://10.0.0.6:8080/target/target-script-min.js#anonymous"></script>
+
+<script type="text/javascript" charset="utf-8" src="http://10.0.0.15:8080/target/target-script-min.js#anonymous"></script>
 
 <title>M-a-d-C</title>
 </head> 
@@ -71,7 +76,7 @@
 <!-- 			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a> -->
 <!-- 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a> -->
 
-			<a href="#loadConfig" data-role="button"  data-iconpos="top" >Versuch laden</a>
+			<a href="#loadConfig" data-role="button"  data-iconpos="top"">Versuch laden</a>
 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top">Versuch anlegen</a>
 			
 		</div>
@@ -97,15 +102,17 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content" align="center" >
-			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a>
-			<a href="#configManually" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a>
+			<form action="#">
+				<b>Config Datei:</b>
+				<input type="file" name="configFile" accept="text/*">
+			</form>
 		</div>
 		<!-- /content -->
 
 		<div data-role="footer" data-position="fixed" data-theme="b">		
 			<fieldset class="ui-grid-a">
 				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
-<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	 -->
+				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="" onclick="readFile('trialConfig.txt')">Config laden</button></div>
 			</fieldset>
 		</div><!-- /footer -->
 	</div>
@@ -127,7 +134,7 @@
 					<b>Versuchstitel:</b>
 					<input type="text" id="trialTitle" value="Versuchstitel"/>
 					<b>Versuchsdatum:</b>
-					<input type="text" data-role="date" id="trialDate">
+					<input type="text" id="trialDate" data-inline="false" data-role="date">
 					<b>Protokoll ID:</b>
 					<input type="text" id="trialProtocolID" value="Protokoll ID"/>
 					<b>Versuchsleiter:</b>
@@ -274,11 +281,20 @@
 		<div id="actualDataset" class="ui-field-contain">
 			<form action="#" name="actualDatasetForm" id="actualDatasetForm" class="ui-field-contain">
 			<fieldset class="ui-grid-a" name="actualDatasetGrid" id="actualDatasetGrid">
+				<div class="ui-block-a"><b>Plot:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="text" name="plot" id="plot" placeholder="Plot"  data-mini="true"/></div>
+				<div class="ui-block-a"><b>Attribut:</b></div>
+ 				<div class="ui-block-b"><input class="ui-disabled" type="text" name="attribut" id="attribut" placeholder="Attribut" data-mini="true"/></div>
+				<div class="ui-block-a"><b>Einheit:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="text" name="scale" id="scale" placeholder="Einheit" data-mini="true"/></div>
+				<div class="ui-block-a"><b>Wert:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="number" name="value" id="value" placeholder="Wert" data-mini="true"/></div>
 			</fieldset>
 			</form>
 		</div>
+		<span></span>
 		<div id="datasetPhoto" align="center">
-			<img style="width:150px;height:150px;" id="smallImage" src="" />
+			<img style="width:150px;height:150px;" id="smallImage" src="img/logo.png" />
 		</div>
 		</div>
 		<!-- /content -->
