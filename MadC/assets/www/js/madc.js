@@ -296,6 +296,43 @@ function createTrial(){
 }
 
 
+function createTrialFromFile(_trialTitle,_trialID,_trialDate,_trialProtocolID,_trialInvestigator,_trialStudyDirector,_trialLocation){
+	console.log("### createTrial with parameters entered ###");
+	
+	
+	var trialTitle = _trialTitle;
+	var trialID = _trialID;
+	var trialDate = _trialDate;
+	var trialProtoclID = _trialProtocolID;
+	var trialInvestigator = _trialInvestigator;
+	var trialStudyDirector = _trialStudyDirector;
+	var trialLocation = _trialLocation;
+	
+	
+	/*
+	 * log outputs to check values
+	 */
+	console.log("Title: " + trialTitle);
+	console.log("ID: " + trialID);
+	console.log("Date: " + trialDate);
+	console.log("Protocol ID: " + trialProtoclID);
+	console.log("Investigator: " + trialInvestigator);
+	console.log("Study director: " + trialStudyDirector);
+	console.log("Location: " + trialLocation);
+	
+	/*
+	 * end log outputs
+	 */
+
+	//create trial
+	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null);
+	console.log("trial object created: " + trial);
+	
+	//$.mobile.changePage("index.html#configManuallyConfigData", {transition: ""});
+	
+}
+
+
 
 
 
@@ -358,6 +395,68 @@ function createTrialConfig(){
 	//testGlobalTrial();
 }
 
+
+function createTrialConfigFromFile(_attributes,_trialAttributes,_trialName,_trialRows,_trialColumns,_trialStart,_trialWalkthrough){
+	console.log("### createTrialConfig with parameters entered ###");
+	
+
+	//var attributes = _attributes;
+	var trialName = _trialName;
+	var trialRows = _trialRows;
+	var trialColumns = _trialColumns;
+	var trialStart = _trialStart;
+	var trialWalkthrough = _trialWalkthrough;
+	var trialAttributes = _trialAttributes;
+	
+	
+	/*
+	 * log outputs to check values
+	 */
+	console.log("Count of attributes: " + attributes);
+	console.log("Trial name: " + trialName);
+	console.log("Trial rows: " + trialRows);
+	console.log("Trial columns: " + trialColumns);
+	console.log("Trial start: " + trialStart);
+	console.log("Trial walkthrough: " + trialWalkthrough);
+	
+	/*
+	 * end log outputs
+	 */
+	
+	//create array of trial config attributes
+	/*for(j=0;j<attributes;j++){
+		var actualType = $('#type'+(j+1), form).val();
+		console.log("Actual type: " + actualType);
+		var actualScale = $('#scale'+(j+1), form).val();
+		console.log("Actual scale: " + actualScale);
+		var actualCount = $('#count'+(j+1), form).val();
+		console.log("Actual count: " + actualCount);
+		var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
+		trialAttributes.push(actualTrialConfigAttribute);
+		console.log("Attribute added: " + actualTrialConfigAttribute.TCAtype);
+	}
+	console.log("Length of Attribute array: " + trialAttributes.length);
+*/
+	//create trial config
+	trialConfig = new TrialConfig(trialRows, trialColumns, trialStart, trialWalkthrough, trialAttributes);
+	console.log("trial config object created: " + trialConfig);
+	
+	//write trial config to file
+	//console.log("writing file: ");
+	//writeFile(trialConfig);
+	
+	//link trial config to trial
+	trial.setTrialConfig(trialConfig);
+	
+	// test if global trial and trial config objects are correct filled
+	//testGlobalTrial();
+	
+	showAlert("Versuch geladen", "Versuch wurde erfolgreich geladen.","startNewConfigOrHome");
+}
+
+
+
+
 function testGlobalTrial(){
 	
 	console.log("Trial - ID: " + trial.Tid);
@@ -368,7 +467,7 @@ function testGlobalTrial(){
 	console.log("Trial - Study director: " + trial.TstudyDirector);
 	console.log("Trial - Location: " + trial.Tlocation);
 	console.log("TrialConfig - Row: " + trial.Tconfig.TCrows);
-	console.log("TrialConfig - Columns: " + trial.Tconfig.TColumns);
+	console.log("TrialConfig - Columns: " + trial.Tconfig.TCcolumns);
 	console.log("TrialConfig - Walkthrough: " + trial.Tconfig.TCwalkthrough);
 	console.log("TrialConfig - Start: " + trial.Tconfig.TCstart);
 	console.log("TrialConfig - Attributes count: " + trial.Tconfig.TCattributes.length);
@@ -1051,7 +1150,7 @@ function addImage(){
                 console.log(evt.target.result);
                 fileText = evt.target.result;
                 console.log("fileText:  "+fileText);
-                loadConfig();
+                loadConfig(fileText);
             };
             reader.readAsText(file);
         }
@@ -1062,7 +1161,9 @@ function addImage(){
     
     }
     
-    function loadConfig(){
+    function loadConfig(_fileText){
+    	
+    	var fileText = _fileText;
     	
     	var trialTitle = "";
     	var trialID = "";
@@ -1071,11 +1172,49 @@ function addImage(){
     	var trialInvestigator = "";
     	var trialStudyDirector = "";
     	var trialLocation = "";
+    	var attributes = "";
+    	var trialName = "";
+    	var trialRows = "";
+    	var trialColumns = "";
+    	var trialStart = "";
+    	var trialWalkthrough = "";
+    	var trialAttributes = new Array();
+    	
+    	
+    	var lines = fileText.split("\n");
+    	var numLines = lines.length;
+    	
+    	
+    	
+    	console.log("LINES:   "+numLines);
+    	
+    	
+    	for(i=0;i<lines.length;i++){
+    		console.log("Line "+i+": "+lines[i]);
+    	}
+    	
+    	var rows = lines[1].split(";");
+    	trialRows = rows[1];
+    	var cols = lines[2].split(";");
+    	trialColumns = cols[1];
+    	var start = lines[3].split(";");
+    	trialStart = start[1];
+    	var wt = lines[4].split(";");
+    	trialWalkthrough = wt[1];
+    	
+    	
+    	
+    	
+    //	var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
+		//trialAttributes.push(actualTrialConfigAttribute);
+    	
     	
    
     	//create trial
-    	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null);
-    	console.log("trial object created: " + trial);
+    	createTrialFromFile(trialTitle, trialID, trialDate, trialProtoclID, trialInvestigator, trialStudyDirector, trialLocation);
+    	
+    	// create trialConfig
+    	createTrialConfigFromFile(attributes,trialAttributes, trialName, trialRows, trialColumns, trialStart, trialWalkthrough);
     	
     }
     
