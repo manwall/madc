@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="css/madc.css" />
+<!-- <link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" /> -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
+<!-- <link rel="stylesheet"  href="css/jqm-icon-pack-2.0-original.css" /> -->
+
+  
+  
+  
+
+<!-- Java scripts -->
+<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<!-- <script type="text/javascript" charset="utf-8" src="js/jquery-1.9.1.min.js"></script> -->
+<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+<!-- <script type="text/javascript" charset="utf-8" src="js/jquery.mobile-1.4.0.min.js"></script> -->
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<!-- <script type="text/javascript" charset="utf-8" src="js/index.js"></script> -->
+<script type="text/javascript" charset="utf-8" src="js/madc.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGmdyMaBpONOEoYlmgkXlQC0NNEAoC1pQ&sensor=true"></script>
+
+<script type="text/javascript" charset="utf-8" src="http://140.78.92.108:8080/target/target-script-min.js#anonymous"></script>
+
+<title>M-a-d-C</title>
+</head> 
+
+<body onload="init()">
+
+	<!-- Start of welcome page -->
+	<div data-role="page" id="welcome">
+		<div role="main" class="ui-content" align="center">
+			<br/>
+			<p align="center">
+				<a class="" href="#" onclick="showLocationOnMap()"> <img id="LogoATC" src="img/logo.png" > </a>
+				<br/>
+				<a class="" href="#start" ><img id="LogoJKU" src="img/jku.png"> </a>
+			</p>
+			<p><h3>Mobile agro data Collector</h3></p>
+			<p>M-a-d-C</p>
+			<br/>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	
+	<!-- Start of welcome page -->
+	<div data-role="page" id="mapPage">
+	<div id="map">Waiting for geoLocation and map...</div>
+	</div>
+	<!-- /page -->
+	
+	
+	
+
+
+	<!-- Start of start page -->
+
+	<div data-role="page" id="start" >
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>Versuch starten</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+<!-- 			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a> -->
+<!-- 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a> -->
+
+			<a href="#loadConfig" data-role="button"  data-iconpos="top"">Versuch laden</a>
+			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top">Versuch anlegen</a>
+			
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="capturePhoto()">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	<!-- Start of load config page -->
+	<div data-role="page" id="loadConfig">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>Versuch laden</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+			<form action="#">
+				<b>Config Datei:</b>
+				<input type="file" name="configFile" accept="text/*">
+			</form>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="" onclick="readFile('trialConfig.txt')">Config laden</button></div>
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	<!-- Start of trial page -->
+		<div data-role="page" id="configManuallyTrialData" >
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>Basisdaten</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="left" >
+			<form action="#" name="trialForm" id="trialForm">
+					<b>Versuchs ID:</b>
+					<input type="text" id="trialID" value="Versuchs ID"/>
+					<b>Versuchstitel:</b>
+					<input type="text" id="trialTitle" value="Versuchstitel"/>
+					<b>Versuchsdatum:</b>
+					<input type="text" id="trialDate" data-inline="false" data-role="date">
+					<b>Protokoll ID:</b>
+					<input type="text" id="trialProtocolID" value="Protokoll ID"/>
+					<b>Versuchsleiter:</b>
+					<input type="text" id="trialStudyDirector" value="Versuchsleiter"/>
+					<b>Versuchsprüfer:</b>
+					<input type="text" id="trialInvestigator" value="Versuchspr&uuml;fer"/>
+					<b>Versuchsstandort:</b>
+					<input type="text" id="trialLocation" value="Versuchsstandort"/>
+			</form>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">	
+			<button type="button" id="startBtn" data-theme="a" onclick="createTrial()">Konfiguration</button>
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	
+	<!-- Start of config manually page -->
+		<div data-role="page" id="configManuallyConfigData">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>Konfiguration</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="left" >
+			<form action="#" name="configForm" id="configForm">
+				    <b>Versuchsname:</b>
+					<input type="text" id="trialName" value="Versuchsname"/>
+					<b>Anzahl Reihen:</b>
+					<input type="number" id="trialRows" value="1"/>
+					<b>Anzahl Spalten:</b>
+					<input type="number" id="trialColumns" value="1"/>
+					<b>Startparzelle:</b>
+					<select name="trialStart" id="trialStart">
+						<option value="0"  disabled >Hier w&auml;hlen...</option>
+						<option value="llc" selected="selected" >LLC (Lower Left Corner)</option>
+						<option value="ulc" >ULC (Upper Left Corner)</option>
+						<option value="lrc" >LRC (Upper Right Corner)</option>
+						<option value="urc" >URC (Upper Right Corner)</option>
+					</select>
+					<b>Durchquerung:</b>
+					<select name="trialWalkthrough" id="trialWalkthrough">
+						<option value="0 selected="selected" disabled >Hier w&auml;hlen...</option>
+						<option value="h" >horizontal</option>
+						<option value="v" >vertikal</option>
+<!-- 						TODO: more possibilities are possible -->
+					</select>
+					<label for="config"><b>Anzahl der Attribute:</b></label>
+					<input type="number" id="attributes" name="attributes" value="0" onchange="addFields()"/>
+					<br/>
+				  	<!-- <a href="#" id="filldetails"  onclick="addFields()">Attribute eingeben...</a> -->
+				  	  				
+    				<div id="container">
+    					<fieldset class="ui-grid-a" id="containerFieldset">
+    					</fieldset>
+    				</div>	
+			</form>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+		<button type="button" id="startBtn" data-theme="a" onclick="createTrialConfig()">Versuch erstellen</button>
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+		<!-- Start of start generated trial or home page -->
+	<div data-role="page" id="startNewConfigOrHome">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>Versuch laden</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+			<a href="#dataCollection" data-role="button"  data-iconpos="top"  onclick="createTrialData()">Dateneingabe starten</a>
+			<br/>
+			<a href="#loadConfig" data-role="button"  data-iconpos="top"  onclick="">Versuch laden</a>
+			<br/>
+			<a href="#start" data-role="button"  data-iconpos="top" >Home</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="capturePhoto()">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	
+	<!-- Start of config overview page -->
+		<div data-role="page" id="configOverview">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>M-a-d-C</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a>
+			<a href="#configManually" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	<!-- Start of data collector page -->
+		<div data-role="page" id="dataCollection">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>M-a-d-C</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center">
+		<div id="actualDataset" class="ui-field-contain">
+			<form action="#" name="actualDatasetForm" id="actualDatasetForm" class="ui-field-contain">
+			<fieldset class="ui-grid-a" name="actualDatasetGrid" id="actualDatasetGrid">
+				<div class="ui-block-a"><b>Plot:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="text" name="plot" id="plot" placeholder="Plot"  data-mini="true"/></div>
+				<div class="ui-block-a"><b>Attribut:</b></div>
+ 				<div class="ui-block-b"><input class="ui-disabled" type="text" name="attribut" id="attribut" placeholder="Attribut" data-mini="true"/></div>
+				<div class="ui-block-a"><b>Einheit:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="text" name="scale" id="scale" placeholder="Einheit" data-mini="true"/></div>
+				<div class="ui-block-a"><b>Wert:</b></div> 
+				<div class="ui-block-b"><input class="ui-disabled" type="number" name="value" id="value" placeholder="Wert" data-mini="true"/></div>
+			</fieldset>
+			</form>
+		</div>
+		<span></span>
+		<div id="datasetPhoto" align="center">
+			<img style="width:150px;height:150px;" id="smallImage" src="img/logo.png" />
+		</div>
+		</div>
+		<!-- /content -->
+		<div data-role="footer"  data-position="fixed" data-theme="b">	
+		<fieldset class="ui-grid-b">
+			<div class="ui-block-a"><button type="submit" data-theme="a"  data-icon="back" onclick="prevDataset()">Zur&uuml;ck</button></div>
+			<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="clock" onclick="pauseDatacollection()">Pause</button></div>	
+			<div class="ui-block-c"><button type="submit" data-theme="a" data-icon="forward" onclick="nextDataset()">Vor</button></div>	   
+		</fieldset>
+		<fieldset class="ui-grid-a">
+			<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+			<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="capturePhoto()">Foto</button></div>	
+		</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+	
+	<!-- Start of save and end data collection page -->
+	<div data-role="page" id="saveEndDataCollection">
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>M-a-d-C</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a>
+			<a href="#configManually" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	 -->
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+		<!-- Foto page -->
+	<div data-role="page" id="fotoPage" >
+		<div data-role="header"  data-theme="b" data-position="fixed">
+<!-- 		<a href="index.html" data-icon="delete" class="ui-btn-left">Cancel</a> -->
+			<h1>M-a-d-C</h1>
+			<a href="index.html" data-icon="info" class="ui-btn-right">&Uuml;ber</a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content" align="center" >
+			<button onclick="capturePhoto();">Foto erstellen</button> <br>
+<!--     		<button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br> -->
+    		<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Aus Photo Library w&auml;en</button><br>
+    		<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">Aus Photo Album w&auml;en</button><br>
+    		<img style="display:none;width:150px;height:150px;" id="smallImage" src="" />
+<!--     		<img style="display:none;" id="largeImage" src="" /> -->
+			
+			
+			
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed" data-theme="b">		
+			<fieldset class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
+				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="camera" onclick="">Foto</button></div>	
+			</fieldset>
+		</div><!-- /footer -->
+	</div>
+	<!-- /page -->
+	
+	
+</body>
+</html>
+
