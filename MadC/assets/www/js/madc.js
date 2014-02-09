@@ -1074,41 +1074,16 @@ function addImage(){
     	
     	pictureSource=navigator.camera.PictureSourceType;
         destinationType=navigator.camera.DestinationType;
-    	
-    	
-//    	getTranslator();
-//        // register the event listener
-//    	document.addEventListener("backbutton", onBackKeyDown, false);
-//    	kofferModel = new KofferModel(null, null, null, null);
-//    	kofferModel.load();
-//    	if(kofferModel.hasCredentials()) {
-//    		// if credentials were loaded from local storage put the to form
-//    		var form = $('#paramedicLogin');
-//            $('#username', form).val(kofferModel.getUserName());
-//            $('#password', form).val(kofferModel.getPassword());
-//            if(kofferModel.getCourse() != null) {
-//            	// if a course is saved in local storage just move to the correct login page
-//            	form = $('#courseForm');
-//            	$('#coursetype, form').val(kofferModel.getCourse().getId());
-//            	moveToCourse();
-//            }
-//    	}else{
-//    		var form = $('#paramedicLogin');
-//    		$('#username', form).val('');
-//    		$('#password', form).val('');
-//    	}
-//    	navigator.splashscreen.hide();
-//    }
-	
-	
+        navigator.splashscreen.hide();
+      
 }
     
     /**
      * On backButton click Exit App
      */
     function onBackKeyDown() {
-    	if($.mobile.activePage.is("#loginPage")) {
-    		navigator.app.exitApp(); // Exit app if current page is loginPage
+    	if($.mobile.activePage.is("#start")) {
+    		navigator.app.exitApp(); // Exit app if current page is start Page
     	} else {
     		navigator.app.backHistory(); // Go back in history in any other case
     	}

@@ -19,19 +19,25 @@
 
 package com.example.hello;
 
-import android.os.Bundle;
 import org.apache.cordova.*;
+
+import android.os.Bundle;
 
 public class HelloWorld extends CordovaActivity 
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+    	super.setIntegerProperty("loadUrlTimeoutValue", 100000); 
         super.onCreate(savedInstanceState);
-        super.init();
+        super.setIntegerProperty("splashscreen", R.drawable.splash);
+      //  super.init();
         // Set by <content src="index.html" /> in config.xml
-        super.loadUrl(Config.getStartUrl());
+       // super.loadUrl(Config.getStartUrl());
+        super.loadUrl(Config.getStartUrl(), 15000);
        // super.loadUrl("file:///assets/www/index.html");
     }
+    
+    
 }
 
