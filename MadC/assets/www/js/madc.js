@@ -29,7 +29,7 @@ var destinationType; // sets the format of returned value
 
 
 
-function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Tdate,Tconfig,Tdata){
+function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Tdate,Tconfig,Tdata,Tstatus){
 	
 	this.Tid = Tid;
 	this.Tlocation = Tlocation;
@@ -40,6 +40,7 @@ function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Td
 	this.Tdate = Tdate;
 	this.Tconfig = Tconfig;
 	this.Tdata = Tdata;
+	this.Tstatus = Tstatus;
 	
 	
 	this.setTrialConfig = function(_Tconfig){
@@ -60,6 +61,16 @@ function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Td
 	
 	this.setTrialData = function(_Tdata){
 		this.Tdata = _Tdata;
+	}
+	
+	this.getTrialStatus = function(){
+		
+		return this.Tstatus;
+		
+	}
+	
+	this.setTrialStatus = function(_Tstatus){
+		this.Tstatus = _Tstatus;
 	}
 	
 
@@ -270,6 +281,7 @@ function createTrial(){
 	var trialInvestigator = $('#trialInvestigator', form).val();
 	var trialStudyDirector = $('#trialStudyDirector', form).val();
 	var trialLocation = $('#trialLocation', form).val();
+	var trialStatus = "created";
 	
 	
 	/*
@@ -288,7 +300,7 @@ function createTrial(){
 	 */
 
 	//create trial
-	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null);
+	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null,trialStatus);
 	console.log("trial object created: " + trial);
 	
 	$.mobile.changePage("index.html#configManuallyConfigData", {transition: ""});
@@ -492,8 +504,9 @@ function writeFile() {
 	    	 * Write all static config data
 	    	 */
 	    	var date = new Date();
-	    	writer.write("Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
-	    	 writer.onwriteend = function(evt) {
+//	    	writer.write("Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
+	    	writer.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");	    	
+	    	writer.onwriteend = function(evt) {
 	    		 /*
 	    		  * write header
 	    		  */
@@ -568,6 +581,7 @@ function clearContainer(_container){
 }
 
 function createTrialData(){
+	trial.setTrialStatus("dataCollectionStarted");
 	if(trial.Tconfig.TCwalkthrough=="h") {
 		createTrialDataHorizontal();
 	}else if(trial.Tconfig.TCwalkthrough=="v"){
@@ -673,6 +687,7 @@ function nextDataset(){
 	console.log("#### Next dataset entered #####");
 	console.log("Last processed: "+ trialData.getTDlastProcessedDatasetElement());
 	console.log("Trial data length: "+ trialData.getTDdatasets().length);
+	trial.setTrialStatus("dataCollectionInProgress");
 	var actualDataset = new TrialDataSet(null, null, null, null, null, null);
 	if(trialData.getTDlastProcessedDatasetElement() < ((trialData.getTDdatasets().length)-1)){
 		console.log("#### last processed < length #####");
@@ -694,7 +709,8 @@ function nextDataset(){
 		console.log("actual Dataset value: "+ actualDataset.TDSvalue);
 		console.log("actual Dataset picture: "+ actualDataset.TDSpicture);
 		writeGeotagToTrialDataSet(trialData.getTDlastProcessedDatasetElement());
-		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\" ><\/div> <br\/>" +
+		var x = "<div class=\"ui-block-a\"><b>TrialID:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"trialId\" id=\"trialId\" placeholder=\"Trial ID\" value=\"" + trial.Tid +"\" data-mini=\"true\" ><\/div> <br\/>"+
+				"<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\" ><\/div> <br\/>" +
 					"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
 						"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
 								"<div class=\"ui-block-a\"><b>Wert:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"number\" name=\"value\" id=\"value\" placeholder=\"Wert\" value=\"" + actualDataset.TDSvalue +"\" data-mini=\"true\" onchange=\"saveValue()\"><\/div><br\/>";		
@@ -733,6 +749,7 @@ function nextDataset(){
 		console.log("#### last processed !< length #####");
 		showAlert("Ende", "Alle Daten des Versuchs erfolgreich aufgezeichnet");
 	}
+	writeTrialData();
 }
 
 
@@ -755,6 +772,7 @@ function prevDataset(){
 	console.log("#### Prevdataset entered #####");
 	console.log("Last processed: "+ trialData.getTDlastProcessedDatasetElement());
 	console.log("Trial data length: "+ trialData.getTDdatasets().length);
+	trial.setTrialStatus("dataCollectionInProgress");
 	var actualDataset = new TrialDataSet(null, null, null,null, null, null);
 	if(trialData.getTDlastProcessedDatasetElement() > 0){
 		
@@ -770,7 +788,8 @@ function prevDataset(){
 		console.log("actual Dataset Type: "+ actualDataset.TDSattributeType);
 		console.log("actual Dataset value: "+ actualDataset.TDSvalue);
 		writeGeotagToTrialDataSet(trialData.getTDlastProcessedDatasetElement());	
-		var x = "<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\"><\/div> <br\/>" +
+		var x = "<div class=\"ui-block-a\"><b>Trial ID:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"trialId\" id=\"trialId\" placeholder=\"Trial ID\" value=\"" + trial.Tid +"\" data-mini=\"true\" ><\/div> <br\/>"+
+			"<div class=\"ui-block-a\"><b>Plot:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"plot\" id=\"plot\" placeholder=\"Plot\" value=\"" + actualDataset.TDSplot +"\" data-mini=\"true\"><\/div> <br\/>" +
 		"<div class=\"ui-block-a\"><b>Attribut:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"attribut\" id=\"attribut\" placeholder=\"Attribut\" value=\"" + actualDataset.TDSattributeType +"\" data-mini=\"true\"><\/div><br\/>" +
 			"<div class=\"ui-block-a\"><b>Einheit:<\/b><\/div> <div class=\"ui-block-b\"><input class=\"ui-disabled\" type=\"text\" name=\"scale\" id=\"scale\" placeholder=\"Einheit\" value=\"" + actualDataset.TDSscale +"\" data-mini=\"true\"><\/div><br\/>" +
 					"<div class=\"ui-block-a\"><b>Wert:<\/b><\/div> <div class=\"ui-block-b\"><input type=\"number\" name=\"value\" id=\"value\" placeholder=\"Wert\" value=\"" + actualDataset.TDSvalue +"\" data-mini=\"true\" onchange=\"saveValue()\"><\/div><br\/>";		
@@ -811,18 +830,28 @@ function prevDataset(){
 		console.log("#### last processed < 0 #####");
 		showAlert("Ende", "Erster Datensatz erreicht oder noch keine Datens&auml;tze eingegeben");
 	}
-	
+	writeTrialData();
 }
 
 
 
 function pauseDatacollection(){
+	trial.setTrialStatus("dataCollectionPaused");
 	writeTrialData();
 	
 }
 
 function endDatacollection(){
+	if(trial!=null){
+	trial.setTrialStatus("dataCollectionEnded");
 	writeTrialData();
+	}
+	
+	$.mobile.changePage("index.html#collectionEnded", {transition: "none"} );
+	
+}
+
+function closeDataCollection(){
 	trial=null;
 	trialConfig=null;
 	trialData=null;
@@ -830,9 +859,6 @@ function endDatacollection(){
 	
 	history.go(-(history.length - 1));
 	window.location.replace("index.html");
-	
-	//$.mobile.changePage("index.html#start", {transition: "none",reloadPage:true} );
-	
 }
 
 function writeTrialData(){
@@ -863,7 +889,7 @@ function writeTrialData(){
 	    	 * Write all static config data
 	    	 */
 	    	var date = new Date();
-	    	writer1.write("Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
+	    	writer1.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
 	    	 writer1.onwriteend = function(evt) {
 	    		 /*
 	    		  * write header
@@ -899,7 +925,7 @@ function writeTrialData(){
 			        			//showAlert("Versuchsdaten geschrieben", "Versuchsdaten erfolgreich geschrieben");
 			        			writer1.onwriteend = function(evt) {
 				        			console.log("ALL data written to trialData.txt");
-				        			showAlert("Daten geschrieben", "Versuch wurde erfolgreich angelegt, Konfiguration und aufgezeichnete Daten geschrieben.");
+//				        			showAlert("Daten geschrieben", "Versuch wurde erfolgreich angelegt, Konfiguration und aufgezeichnete Daten geschrieben.");
 				        		};
 			        	
 		        		};

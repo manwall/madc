@@ -28,13 +28,13 @@ public class HelloWorld extends CordovaActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	super.setIntegerProperty("loadUrlTimeoutValue", 100000); 
+    	super.setIntegerProperty("loadUrlTimeoutValue", 50000); 
         super.onCreate(savedInstanceState);
         super.setIntegerProperty("splashscreen", R.drawable.splash);
       //  super.init();
         // Set by <content src="index.html" /> in config.xml
        // super.loadUrl(Config.getStartUrl());
-        super.loadUrl(Config.getStartUrl(), 15000);
+        super.loadUrl(Config.getStartUrl(),5000);
        // super.loadUrl("file:///assets/www/index.html");
     }
     
