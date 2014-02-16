@@ -1219,4 +1219,167 @@ function addImage(){
     	
     }
     
+    
+    function dirListing(){
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess,onFileSystemFail); 
+    
+    function onFileSystemSuccess(fileSystem) {
+        console.log(fileSystem.name);
+        var directoryEntry = fileSystem.root;
+        var directoryReader = directoryEntry.createReader();
+        directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
+         
+       // directoryEntry.getDirectory("Trials", {create: true, exclusive: false}, onDirectorySuccess, onDirectoryFail)
+    }
+    
+//        console.log("Root = " + fs.root.fullPath);
+//        var directoryEntry = fs.root;
+//        directoryEntry.getDirectory("Trials",{create:false,exclusive:false},onDirectorySuccess,onDirectoryFail);
+//        var directoryReader = fs.root.createReader();
+//        var x = "<div class=\"ui-block-a\"><b><u>Dateiname:<\/b></u><\/div>  <br\/>";
+//        directoryReader.readEntries(function(entries) {
+//            var i;
+//            for (i=0; i<entries.length; i++) {
+//                console.log(entries[i].name);
+//                if(entries[i].isDirectory){
+//                	console.log("DIRECTORY: "+entries[i].name);
+//                }else{
+//                	console.log("File: "+entries[i].name);
+//                	x = x + "<div class=\"ui-block-a\"><b>" + entries[i].name+ "<\/b><\/div>  <br\/> ";
+//                	
+//                	
+//                	$("#actualDirectoryListeningGrid").html(x);
+//                	
+//                	
+//                }
+//
+//            }
+//        }, function (error) {
+//            alert(error.code);
+//        })
+//   }, function (error) {
+//           alert(error.code);
+//   });
+        
+        function onDirectorySuccess(parent) {
+
+            console.log(parent.name);
+            
+          
+        }
+        
+        
+        function onDirectoryFail(error) {
+            alert("Unable to create new directory: " + error.code);
+        }
+        
+        function onFileSystemFail(evt) {
+            console.log(evt.target.error.code);
+        }
+        
+    }
+    
+    
+    
+    /**
+     * File explorer logic
+     */
+   // var currentPath = "file:///store";
+//    $('#loadConfig').live('pagebeforeshow', function(event) {
+//        populate(currentPath);
+//    });
+//    function populate(){
+//    	var path = "file:///";
+//    	console.log("populate PATH eneterd ");
+//        try {
+//        	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS1, fail);
+//        
+//        function gotFS1(fs){
+//        	console.log("Root = " + fs.root.fullPath);
+//            var directoryReader = fs.root.createReader();
+//        	
+////        	fileSystem.root.getFile(actualFile, null, gotFileEntry, fail);
+////            var dirEntry = new DirectoryEntry({fullPath: path});
+////            var directoryReader = dirEntry.createReader();
+//           directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
+//        }
+//        } catch (e) {
+//            alert(dump(e));
+//        }
+//    }
+    function successDirectoryReader(entries) {
+    	console.log("success directory eneterd ");
+        var i;
+        $("#Explorer").html('');
+        for (i=0; i<entries.length; i++) {
+            if (entries[i].isDirectory) {
+                $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/folder.png' style='border:2px;' onclick='changePath(this)'/></div><div style='width:100px;word-wrap:break-word;'>" + entries[i].name + "</div></div>");
+            } else {
+                //var fileType = blackberry.io.file.getFileProperties(entries[i].fullPath).mimeType;
+               // if (Left(fileType,5) == 'image') {
+                    // if file is of type image, then show in small size
+                 //   $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='" + entries[i].fullPath + "' height='80px' width='80px' style='border:2px;' /></div><div  style='width:100px;word-wrap:break-word;'>" + entries[i].name + "</div></div>");
+               // } else {
+                    $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/file.png' style='border:2px;' /></div><div>" + entries[i].name + "</div></div>");
+                //}
+            }
+        }
+        // add an option to go to parent directory
+        if (currentPath != "file:///store") {
+            $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/folder.png' style='border:2px;' onclick='backPath()'/></div><div style='width:100px;word-wrap:break-word;'>..</div></div>");
+        }
+    }
+    function failDirectoryReader(error) {
+    	console.log("vail directory reader eneterd ");
+        alert("Failed to list directory contents: " + error.code);
+    }
+    function backPath() {
+    	console.log("back PATH eneterd ");
+        currentPath = Left(currentPath, currentPath.lastIndexOf('/'));
+        populate(currentPath);
+    }
+    function changePath(ele){
+    	console.log("pchange PATH eneterd ");
+        currentPath = currentPath + "/" + $(ele).parent().next().html();
+        populate(currentPath);
+    }
+     
+    //Error dump function
+    function dump(arr,level) {
+    	console.log("dump eneterd ");
+        var dumped_text = "";
+        if(!level) level = 0;
+     
+        var level_padding = "";
+        for(var j=0;j<level+1;j++) level_padding += "    ";
+     
+        if(typeof(arr) == 'object') { 
+            for(var item in arr) {
+                var value = arr[item];
+     
+                if(typeof(value) == 'object') {
+                    dumped_text += level_padding + "'" + item + "' ...\n";
+                    dumped_text += dump(value,level+1);
+                } else {
+                    dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+                }
+            }
+        } else {
+            dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+        }
+        return dumped_text;
+    }
+     
+    //String left function
+    function Left(str, n){
+    	console.log("left eneterd ");
+        if (n <= 0)
+            return "";
+        else if (n > String(str).length)
+            return str;
+        else
+            return String(str).substring(0,n);
+    }
+    
+    
  

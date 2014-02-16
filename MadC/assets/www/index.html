@@ -18,11 +18,15 @@
 
 <!-- Java scripts -->
 <!-- <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.11.0.min.js"></script> -->
+
 <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 <!--  <script type="text/javascript" charset="utf-8" src="js/jquery-1.9.1.min.js"></script> -->
+
 <!-- <script type="text/javascript" charset="utf-8" src="jquery-1.10.2.min.js"></script> -->
 <!-- <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script> -->
 <script type="text/javascript" charset="utf-8" src="js/jquery.mobile-1.4.0.min.js"></script>
+
+
 <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/madc.js"></script>
 <!-- <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGmdyMaBpONOEoYlmgkXlQC0NNEAoC1pQ&sensor=true"></script> -->
@@ -77,7 +81,7 @@
 <!-- 			<a href="#loadConfig" data-role="button"  data-iconpos="top" style="font-size:30pt;">Versuch laden</a> -->
 <!-- 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a> -->
 
-			<a href="#loadConfig" data-role="button"  data-iconpos="top"">Versuch laden</a>
+			<a href="#loadConfig" data-role="button"  data-iconpos="top" onclick="dirListing()">Versuch laden</a>
 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top">Versuch anlegen</a>
 			
 		</div>
@@ -103,9 +107,16 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content" align="center" >
-			<form action="#">
-				<b>Config Datei:</b>
-				<input type="file" name="configFile" accept="text/*">
+<!-- 		<fieldset class="ui-grid-solo" name="actualDirectoryListeningGrid" id="actualDirectoryListeningGrid"> -->
+<!-- 				<div class="ui-block-a"><b>Dateiname:</b></div>  -->
+<!-- 			</fieldset> -->
+		
+		
+		
+	<div id="Explorer" style="float:left"></div>
+<!-- 			<form action="#"> -->
+<!-- 				<b>Config Datei:</b> -->
+<!-- 				<input type="file" name="configFile" accept="text/*"> -->
 			</form>
 		</div>
 		<!-- /content -->
