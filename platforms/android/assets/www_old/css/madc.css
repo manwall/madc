@@ -1,0 +1,76 @@
+
+/*
+* Manuel style for M-a-d-C
+* 
+* ActionBar icons
+*
+*/
+
+
+
+#bigButton { height: 130px; border: 3px;border-style: hidden; border-color: red; padding: 10px; }
+.bigButton {font-size: 3em; width: 70%; height:80%;}
+
+
+.aboutBtn {
+	width: 3.0em;
+	height: 3.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_about.png);
+}
+.backBtn {
+	width: 2.0em;
+	height: 2.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_back.png);
+}
+.homeBtn {
+	width: 2.0em;
+	height: 2.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_home.png);
+}
+.logoutBtn {
+	width: 2.0em;
+	height: 2.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_logoff.png);
+}
+.refreshBtn {
+	width: 2.0em;
+	height: 2.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_refresh.png);
+}
+.settingsBtn {
+	width: 2.0em;
+	height: 2.0em;
+	background-color: transparent;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-image: url(images/ic_settings.png);
+}
+
+/* Hover effects on icons */
+.opacity {opacity:1.0; filter:alpha(opacity=100);}
+.opacity:hover {opacity:0.75; filter:alpha(opacity=75);}
+
+#map{width: 280px;height: 230px;display: block;margin: 5px auto;position: relative;border: 2px}
+
+
