@@ -17,13 +17,15 @@
        under the License.
  */
 
-package com.example.hello;
+package at.tk.jku.madc;
 
 import org.apache.cordova.*;
 
+import at.tk.jku.madc.R;
+
 import android.os.Bundle;
 
-public class HelloWorld extends CordovaActivity 
+public class Madc extends CordovaActivity 
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
