@@ -26,6 +26,9 @@ var trialData = null;
 var geotag = null;
 var pictureSource;   // picture source
 var destinationType; // sets the format of returned value
+var actualEntries = null;
+var actualFileCounter = 0;
+var trialFolder="Trials";
 
 
 
@@ -277,7 +280,7 @@ function createTrial(){
 	var trialTitle = $('#trialTitle', form).val();
 	var trialID = $('#trialID', form).val();
 	var trialDate = $('#trialDate', form).val();
-	var trialProtoclID = $('#trialProtocolID', form).val();
+	var trialProtocolID = $('#trialProtocolID', form).val();
 	var trialInvestigator = $('#trialInvestigator', form).val();
 	var trialStudyDirector = $('#trialStudyDirector', form).val();
 	var trialLocation = $('#trialLocation', form).val();
@@ -290,7 +293,7 @@ function createTrial(){
 	console.log("Title: " + trialTitle);
 	console.log("ID: " + trialID);
 	console.log("Date: " + trialDate);
-	console.log("Protocol ID: " + trialProtoclID);
+	console.log("Protocol ID: " + trialProtocolID);
 	console.log("Investigator: " + trialInvestigator);
 	console.log("Study director: " + trialStudyDirector);
 	console.log("Location: " + trialLocation);
@@ -300,7 +303,7 @@ function createTrial(){
 	 */
 
 	//create trial
-	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null,trialStatus);
+	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtocolID, trialTitle, trialDate, null, null,trialStatus);
 	console.log("trial object created: " + trial);
 	
 	$.mobile.changePage("index.html#configManuallyConfigData", {transition: ""});
@@ -315,7 +318,7 @@ function createTrialFromFile(_trialTitle,_trialID,_trialDate,_trialProtocolID,_t
 	var trialTitle = _trialTitle;
 	var trialID = _trialID;
 	var trialDate = _trialDate;
-	var trialProtoclID = _trialProtocolID;
+	var trialProtocolID = _trialProtocolID;
 	var trialInvestigator = _trialInvestigator;
 	var trialStudyDirector = _trialStudyDirector;
 	var trialLocation = _trialLocation;
@@ -327,7 +330,7 @@ function createTrialFromFile(_trialTitle,_trialID,_trialDate,_trialProtocolID,_t
 	console.log("Title: " + trialTitle);
 	console.log("ID: " + trialID);
 	console.log("Date: " + trialDate);
-	console.log("Protocol ID: " + trialProtoclID);
+	console.log("Protocol ID: " + trialProtocolID);
 	console.log("Investigator: " + trialInvestigator);
 	console.log("Study director: " + trialStudyDirector);
 	console.log("Location: " + trialLocation);
@@ -337,7 +340,7 @@ function createTrialFromFile(_trialTitle,_trialID,_trialDate,_trialProtocolID,_t
 	 */
 
 	//create trial
-	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtoclID, trialTitle, trialDate, null, null);
+	trial = new Trial(trialID, trialLocation, trialStudyDirector, trialInvestigator, trialProtocolID, trialTitle, trialDate, null, null);
 	console.log("trial object created: " + trial);
 	
 	//$.mobile.changePage("index.html#configManuallyConfigData", {transition: ""});
@@ -398,7 +401,8 @@ function createTrialConfig(){
 	
 	//write trial config to file
 	console.log("writing file: ");
-	writeFile(trialConfig);
+
+	writeFile();
 	
 	//link trial config to trial
 	trial.setTrialConfig(trialConfig);
@@ -412,7 +416,7 @@ function createTrialConfigFromFile(_attributes,_trialAttributes,_trialName,_tria
 	console.log("### createTrialConfig with parameters entered ###");
 	
 
-	//var attributes = _attributes;
+	var attributes = _attributes;
 	var trialName = _trialName;
 	var trialRows = _trialRows;
 	var trialColumns = _trialColumns;
@@ -436,19 +440,19 @@ function createTrialConfigFromFile(_attributes,_trialAttributes,_trialName,_tria
 	 */
 	
 	//create array of trial config attributes
-	/*for(j=0;j<attributes;j++){
-		var actualType = $('#type'+(j+1), form).val();
-		console.log("Actual type: " + actualType);
-		var actualScale = $('#scale'+(j+1), form).val();
-		console.log("Actual scale: " + actualScale);
-		var actualCount = $('#count'+(j+1), form).val();
-		console.log("Actual count: " + actualCount);
-		var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
-		trialAttributes.push(actualTrialConfigAttribute);
-		console.log("Attribute added: " + actualTrialConfigAttribute.TCAtype);
-	}
+//	for(j=0;j<attributes;j++){
+//		var actualType = $('#type'+(j+1), form).val();
+//		console.log("Actual type: " + actualType);
+//		var actualScale = $('#scale'+(j+1), form).val();
+//		console.log("Actual scale: " + actualScale);
+//		var actualCount = $('#count'+(j+1), form).val();
+//		console.log("Actual count: " + actualCount);
+//		var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
+//		trialAttributes.push(actualTrialConfigAttribute);
+//		console.log("Attribute added: " + actualTrialConfigAttribute.TCAtype);
+//	}
 	console.log("Length of Attribute array: " + trialAttributes.length);
-*/
+
 	//create trial config
 	trialConfig = new TrialConfig(trialRows, trialColumns, trialStart, trialWalkthrough, trialAttributes);
 	console.log("trial config object created: " + trialConfig);
@@ -489,6 +493,7 @@ function testGlobalTrial(){
 
 
 function writeFile() {
+	console.log("writeFile() entered");
 	 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 	 function gotFS(fileSystem) {
 	        fileSystem.root.getFile("trialConfig.txt", {create: true, exclusive: false}, gotFileEntry, fail);
@@ -505,7 +510,7 @@ function writeFile() {
 	    	 */
 	    	var date = new Date();
 //	    	writer.write("Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
-	    	writer.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");	    	
+	    	writer.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n"+"AttributeCount;"+trialConfig.TCattributes.length+"\n");	    	
 	    	writer.onwriteend = function(evt) {
 	    		 /*
 	    		  * write header
@@ -889,7 +894,7 @@ function writeTrialData(){
 	    	 * Write all static config data
 	    	 */
 	    	var date = new Date();
-	    	writer1.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n");
+	    	writer1.write("Tid;"+trial.Tid+"\n"+"Tlocation;"+trial.Tlocation+"\n"+"TstudyDirector;"+trial.TstudyDirector+"\n"+"Tinvestigator;"+trial.Tinvestigator+"\n"+"TprotocolId;"+trial.TprotocolId+"\n"+"Ttitle;"+trial.Ttitle+"\n"+"Tdate;"+trial.Tdate+"\n"+"Tstatus;"+trial.Tstatus+"\n"+"Date;"+date+"\n"+"Rows;"+trialConfig.TCrows+"\n"+"Columns;"+trialConfig.TCcolumns+"\n"+"Start;"+trialConfig.TCstart+"\n"+"Walkthrough;"+trialConfig.TCwalkthrough+"\n"+"AttributeCount;"+trialConfig.TCattributes.length+"\n");
 	    	 writer1.onwriteend = function(evt) {
 	    		 /*
 	    		  * write header
@@ -1116,6 +1121,7 @@ function addImage(){
     }
     
     function readFile(actualFile){
+    	console.log("readFile entered ....");
     	var fileText ="";
  
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
@@ -1169,7 +1175,7 @@ function addImage(){
     	var trialTitle = "";
     	var trialID = "";
     	var trialDate = "";
-    	var trialProtoclID = "";
+    	var trialProtocolID = "";
     	var trialInvestigator = "";
     	var trialStudyDirector = "";
     	var trialLocation = "";
@@ -1194,25 +1200,50 @@ function addImage(){
     		console.log("Line "+i+": "+lines[i]);
     	}
     	
-    	var rows = lines[1].split(";");
+    	var rows = lines[9].split(";");
     	trialRows = rows[1];
-    	var cols = lines[2].split(";");
+    	var cols = lines[10].split(";");
     	trialColumns = cols[1];
-    	var start = lines[3].split(";");
+    	var start = lines[11].split(";");
     	trialStart = start[1];
-    	var wt = lines[4].split(";");
+    	var wt = lines[12].split(";");
     	trialWalkthrough = wt[1];
+    	var tt = lines[5].split(";");
+    	trialTitle = tt[1];
+    	var tid = lines[0].split(";");
+    	trialID = tid[1];
+    	var td = lines[6].split(";");
+    	trialDate = td[1];
+    	var tpid = lines[4].split(";");
+    	trialProtocolID = tpid[1];
+    	var tin = lines[3].split(";");
+    	trialInvestigator = tin[1];
+    	var tsd = lines[2].split(";");
+    	trialStudyDirector = tsd[1];
+    	var tl = lines[1].split(";");
+    	trialLocation = tl[1];
+    	var attri = lines[13].split(";");
+    	attributes = attri[1];
+    	var end = parseInt(attributes) +15;
+    	console.log("END in loop: "+end);
     	
-    	
-    	
-    	
-    //	var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
-		//trialAttributes.push(actualTrialConfigAttribute);
-    	
-    	
+    	for(a=15;a<end;a++){
+    		console.log("Line in loop:  "+a+": "+lines[a]);
+    		var actualAttribLine=lines[a].split(";");
+    		var actualType = actualAttribLine[0];
+    		console.log("Actual type: " + actualType);
+    		var actualScale = actualAttribLine[1];
+    		console.log("Actual scale: " + actualScale);
+    		var actualCount = actualAttribLine[2];
+    		console.log("Actual count: " + actualCount);
+    		var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
+    		trialAttributes.push(actualTrialConfigAttribute);
+    		console.log("Attribute added: " + actualTrialConfigAttribute.TCAtype);
+    	}
+    
    
     	//create trial
-    	createTrialFromFile(trialTitle, trialID, trialDate, trialProtoclID, trialInvestigator, trialStudyDirector, trialLocation);
+    	createTrialFromFile(trialTitle, trialID, trialDate, trialProtocolID, trialInvestigator, trialStudyDirector, trialLocation);
     	
     	// create trialConfig
     	createTrialConfigFromFile(attributes,trialAttributes, trialName, trialRows, trialColumns, trialStart, trialWalkthrough);
@@ -1225,9 +1256,14 @@ function addImage(){
     
     function onFileSystemSuccess(fileSystem) {
         console.log(fileSystem.name);
-        var directoryEntry = fileSystem.root;
-        var directoryReader = directoryEntry.createReader();
-        directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
+       
+       var directoryEntry = fileSystem.root;
+       console.log("Root = " + fileSystem.root.fullPath);
+      directoryEntry.getDirectory("Trials",{create:false,exclusive:false},onDirectorySuccess,onDirectoryFail);
+      
+      // var directoryEntry = "file:///storage/emulated/0";
+//        var directoryReader = directoryEntry.createReader();
+//        directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
          
        // directoryEntry.getDirectory("Trials", {create: true, exclusive: false}, onDirectorySuccess, onDirectoryFail)
     }
@@ -1260,18 +1296,20 @@ function addImage(){
 //   }, function (error) {
 //           alert(error.code);
 //   });
-        
-        function onDirectorySuccess(parent) {
-
-            console.log(parent.name);
-            
-          
+    
+    
+    
+    
+    function onDirectorySuccess(parent) {
+           console.log(parent.name);
+           var directoryReader = parent.createReader();
+           directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
         }
         
         
         function onDirectoryFail(error) {
             alert("Unable to create new directory: " + error.code);
-        }
+       }
         
         function onFileSystemFail(evt) {
             console.log(evt.target.error.code);
@@ -1281,54 +1319,71 @@ function addImage(){
     
     
     
+        
+    
+    
+    
     /**
      * File explorer logic
      */
-   // var currentPath = "file:///store";
+    var currentPath = "";
 //    $('#loadConfig').live('pagebeforeshow', function(event) {
 //        populate(currentPath);
 //    });
-//    function populate(){
-//    	var path = "file:///";
-//    	console.log("populate PATH eneterd ");
-//        try {
-//        	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS1, fail);
-//        
-//        function gotFS1(fs){
-//        	console.log("Root = " + fs.root.fullPath);
-//            var directoryReader = fs.root.createReader();
-//        	
-////        	fileSystem.root.getFile(actualFile, null, gotFileEntry, fail);
-////            var dirEntry = new DirectoryEntry({fullPath: path});
-////            var directoryReader = dirEntry.createReader();
-//           directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
-//        }
-//        } catch (e) {
-//            alert(dump(e));
-//        }
-//    }
+    function populate(){
+    	var path = "file:///";
+    	console.log("populate PATH eneterd ");
+        try {
+        	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS1, fail);
+        
+        function gotFS1(fs){
+        	console.log("Root = " + fs.root.fullPath);
+            var directoryReader = fs.root.createReader();
+        	
+        	fs.root.getFile(actualFile, null, gotFileEntry, fail);
+            var dirEntry = new DirectoryEntry({fullPath: path});
+            var directoryReader = dirEntry.createReader();
+           directoryReader.readEntries(successDirectoryReader,failDirectoryReader);
+        }
+        } catch (e) {
+            alert(dump(e));
+        }
+    }
+    
+    
     function successDirectoryReader(entries) {
+    	actualEntries = entries;
     	console.log("success directory eneterd ");
+    	console.log("PATH entries:"+entries.fullPath);
         var i;
         $("#Explorer").html('');
         for (i=0; i<entries.length; i++) {
+        	actualFileCounter = 1;
             if (entries[i].isDirectory) {
-                $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/folder.png' style='border:2px;' onclick='changePath(this)'/></div><div style='width:100px;word-wrap:break-word;'>" + entries[i].name + "</div></div>");
+                $("#Explorer").append("<div style='float:left;text-align:center;'><div><img src='img/folder.png' width='25px' height='25px' style='border:2px;' onclick=''/></div><div style='width:100px;word-wrap:break-word;'>" + entries[i].name + "</div></div>");
             } else {
                 //var fileType = blackberry.io.file.getFileProperties(entries[i].fullPath).mimeType;
                // if (Left(fileType,5) == 'image') {
                     // if file is of type image, then show in small size
                  //   $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='" + entries[i].fullPath + "' height='80px' width='80px' style='border:2px;' /></div><div  style='width:100px;word-wrap:break-word;'>" + entries[i].name + "</div></div>");
                // } else {
-                    $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/file.png' style='border:2px;' /></div><div>" + entries[i].name + "</div></div>");
+                    $("#Explorer").append("<div style='float:left;text-align:center;'><div><img src='img/file.png' width='25px' height='25px' style='border:2px;' onclick='openFile("+i+")' /></div><div>" + entries[i].name + "</div></div>");
                 //}
             }
         }
         // add an option to go to parent directory
         if (currentPath != "file:///store") {
-            $("#Explorer").append("<div style='width:104px;float:left;text-align:center;'><div><img src='local:///resources/folder.png' style='border:2px;' onclick='backPath()'/></div><div style='width:100px;word-wrap:break-word;'>..</div></div>");
+            $("#Explorer").append("<div style='float:left;text-align:center;'><div><img src='img/folder.png' width='25px' height='25px' style='border:2px;' onclick=''/></div><div style='width:100px;word-wrap:break-word;'>..</div></div>");
         }
     }
+    
+    function openFile(x){
+    	console.log("File to read: " + actualEntries[x].name);
+    	readFile(trialFolder+"/"+actualEntries[x].name);
+    	
+    }
+    
+    
     function failDirectoryReader(error) {
     	console.log("vail directory reader eneterd ");
         alert("Failed to list directory contents: " + error.code);
@@ -1339,9 +1394,12 @@ function addImage(){
         populate(currentPath);
     }
     function changePath(ele){
-    	console.log("pchange PATH eneterd ");
+    	console.log("change PATH eneterd ");
+    	//console.log("PaTH:  "+ele.fullPath);
         currentPath = currentPath + "/" + $(ele).parent().next().html();
-        populate(currentPath);
+        console.log("PATH: "+currentPath);
+        dirListing1(currentPath);
+       // populate(currentPath);
     }
      
     //Error dump function
@@ -1379,6 +1437,12 @@ function addImage(){
             return str;
         else
             return String(str).substring(0,n);
+    }
+    
+    
+    function exitFromApp()
+    {
+       navigator.app.exitApp();
     }
     
     

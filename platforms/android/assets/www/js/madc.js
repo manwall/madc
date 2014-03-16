@@ -1446,4 +1446,45 @@ function addImage(){
     }
     
     
+    
+    
+    function fetchConfigFromServer(){
+    	navigator.app.exitApp();
+    }
+    
+    function pushDataToServer(trialpath){
+    	console.log("push data to server entered ");
+    	 console.log("trialpath: " + trialpath);
+    	 var options = new FileUploadOptions();
+         options.fileKey="file";
+         options.fileName=trialpath.substr(trialpath.lastIndexOf('/')+1);
+        // options.mimeType="image/jpeg";
+
+         var params = {};
+         params.value1 = "test";
+         params.value2 = "param";
+
+         options.params = params;
+
+         var ft = new FileTransfer();
+         ft.upload(trialpath, encodeURI("http://10.0.0.6:8090/FileUpload/fileuploadservlet"), win, fail, options);
+     }
+
+     function win(r) {
+         console.log("Code = " + r.responseCode);
+         console.log("Response = " + r.response);
+         console.log("Sent = " + r.bytesSent);
+     }
+
+     function fail(error) {
+         alert("An error has occurred: Code = " + error.code);
+         console.log("upload error source " + error.source);
+         console.log("upload error target " + error.target);
+     }
+     
+
+    	
+    
+    
+    
  
