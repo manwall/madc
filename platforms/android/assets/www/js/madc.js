@@ -23,12 +23,16 @@ var trial = null;
 var trialConfig = null;
 var trialDataSet = null;
 var trialData = null;
+var trialPictureSet = null;
 var geotag = null;
 var pictureSource;   // picture source
 var destinationType; // sets the format of returned value
 var actualEntries = null;
 var actualFileCounter = 0;
 var trialFolder="Trials";
+var tmpTrialPath = "/Trials/tmp/";
+var devicePath = "/storage/emulated/0/";
+var serverPath ="http://10.0.0.12:8090/FileUpDownload/fileuploadservlet";
 
 
 
@@ -44,6 +48,8 @@ function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Td
 	this.Tconfig = Tconfig;
 	this.Tdata = Tdata;
 	this.Tstatus = Tstatus;
+	
+	trialPictureSet = new Array();
 	
 	
 	this.setTrialConfig = function(_Tconfig){
@@ -496,6 +502,11 @@ function writeFile() {
 	console.log("writeFile() entered");
 	 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 	 function gotFS(fileSystem) {
+//		 console.log("path before: "+fileSystem.root.fullPath);
+		 
+		 fileSystem.root.fullPath=tmpTrialPath;
+		 
+//		 console.log("path after: "+fileSystem.root.fullPath);
 	        fileSystem.root.getFile("trialConfig.txt", {create: true, exclusive: false}, gotFileEntry, fail);
 	    }
 
@@ -529,7 +540,7 @@ function writeFile() {
 		        		}
 		        		writer.write(actualData);
 		        		writer.onwriteend = function(evt) {
-		        			console.log("attribute data written....");
+		        			
 		        			showAlert("Versuch angelegt", "Versuch wurde erfolgreich angelegt und Konfiguration geschrieben.","startNewConfigOrHome");
 		        		};
 		        	};
@@ -878,7 +889,8 @@ function writeTrialData(){
 		 var year = date.getFullYear();
 		 var month = date.getMonth()+1;
 		 var day = date.getDate();
-		 var filename = trialId+"_"+trialTitle+"_"+year+month+day+".txt";
+		 var filename = trialId+"_"+trialTitle+".txt";
+		 fileSystem.root.fullPath="/"+ trialFolder +"/";
 	        fileSystem.root.getFile(filename, {create: true, exclusive: false}, gotFileEntry1, fail);
 	    }
 
@@ -1014,7 +1026,7 @@ function addImage(){
     //
     function onPhotoDataSuccess(imageData) {
       // Uncomment to view the base64-encoded image data
-       console.log(imageData);
+       console.log("IMAGE DATA: "+  imageData);
 
     // store photo to actual dataset
        var lastProcessed = trial.getTrialData().getTDlastProcessedDatasetElement();
@@ -1022,6 +1034,12 @@ function addImage(){
    	var actualDataset = trial.getTrialData().TDdatasets[lastProcessed];
    	console.log("actualDataset value: "+actualDataset.TDSvalue)
    	actualDataset.TDSpicture = imageData;
+  
+   	trialPictureSet.push(imageData);
+   	console.log("picture set lenght:  "+trialPictureSet.length);
+   	for(d=0;d<trialPictureSet.length;d++){
+   		console.log("picture:  "+trialPictureSet[d]);
+   	}
     	
     	
     	
@@ -1449,11 +1467,39 @@ function addImage(){
     
     
     function fetchConfigFromServer(){
-    	navigator.app.exitApp();
+    	var fileTransfer = new FileTransfer();
+    	var uri = encodeURI("http://10.0.0.12:8090/FileUpDownload/filedownloadservlet");
+    	var filePath = devicePath + "/"+trialFolder+"/testDownload.txt";
+
+    	fileTransfer.download(uri,filePath,
+    			function(entry) {
+    	        console.log("download complete: " + entry.fullPath + "  Name: " +entry.name);
+    	    
+    	    
+    	    
+    	    },
+    	    function(error) {
+    	        console.log("download error source " + error.source);
+    	        console.log("download error target " + error.target);
+    	        console.log("upload error code" + error.code);
+    	    },
+    	    false,
+    	    {
+    	        headers: {
+    	            "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+    	        }
+    	    }
+    	);
+
     }
     
-    function pushDataToServer(trialpath){
+    function pushDataToServer(){
     	console.log("push data to server entered ");
+    	var allOK = true;
+    	var trialId = trial.Tid;
+		 var trialTitle = trial.Ttitle; 
+    	 var trialpath = devicePath+trialFolder+"/" +trialId+"_"+trialTitle+".txt";;
+    	 
     	 console.log("trialpath: " + trialpath);
     	 var options = new FileUploadOptions();
          options.fileKey="file";
@@ -1461,25 +1507,39 @@ function addImage(){
         // options.mimeType="image/jpeg";
 
          var params = {};
-         params.value1 = "test";
-         params.value2 = "param";
+         
 
          options.params = params;
 
          var ft = new FileTransfer();
-         ft.upload(trialpath, encodeURI("http://10.0.0.6:8090/FileUpload/fileuploadservlet"), win, fail, options);
+         ft.upload(trialpath, encodeURI(serverPath), win, fail, options);
+         
+         
+         
+         for(i=0;i<trialPictureSet.length;i++){
+        	 params.corrsepondigTrial = trialId+"_"+trialTitle;
+        	 options.mimeType="image/jpeg";
+        	 options.fileName =  trialPictureSet[i].substr(trialPictureSet[i].lastIndexOf('/')+1);
+        	  ft.upload(trialPictureSet[i], encodeURI(serverPath), win, fail, options); 
+         }
+         
+         if(allOK){
+        	 showAlert("Upload erfolreich" ,"Versuch erfolgreich uebertragen ")
+         }
      }
 
      function win(r) {
          console.log("Code = " + r.responseCode);
          console.log("Response = " + r.response);
          console.log("Sent = " + r.bytesSent);
+         
      }
 
      function fail(error) {
          alert("An error has occurred: Code = " + error.code);
          console.log("upload error source " + error.source);
          console.log("upload error target " + error.target);
+         allOK = false;
      }
      
 

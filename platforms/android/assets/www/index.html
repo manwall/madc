@@ -31,7 +31,7 @@
 <script type="text/javascript" charset="utf-8" src="js/madc.js"></script>
 <!-- <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGmdyMaBpONOEoYlmgkXlQC0NNEAoC1pQ&sensor=true"></script> -->
 
- <script type="text/javascript" charset="utf-8" src="http://10.0.0.6:8080/target/target-script-min.js#anonymous"></script> 
+ <script type="text/javascript" charset="utf-8" src="http://10.0.0.12:8080/target/target-script-min.js#anonymous"></script> 
 <title>M-a-d-C</title>
 </head> 
 
@@ -82,7 +82,7 @@
 			
 			
 			<a href="#" data-role="button"  data-iconpos="top" onclick="fetchConfigFromServer()">Versuche von Server abholen</a>
-			<a href="#" data-role="button"  data-iconpos="top" onclick="pushDataToServer('/storage/emulated/0/Trials/trialConfig.txt')">Versuche auf Server kopieren</a>
+<!-- 			<a href="#" data-role="button"  data-iconpos="top" onclick="pushAllDataToServer()">Versuche auf Server kopieren</a> -->
 			<br/><br/>
 			<a href="#loadConfig" data-role="button"  data-iconpos="top" onclick="dirListing()">Versuch laden</a>
 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top">Versuch anlegen</a>
@@ -127,7 +127,7 @@
 		<div data-role="footer" data-position="fixed" data-theme="b">		
 			<fieldset class="ui-grid-a">
 				<div class="ui-block-a"><button type="submit" data-theme="a" data-icon="power" onclick="endDatacollection()">Beenden</button></div>
-				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="" onclick="readFile('Trials/trialConfig.txt')">Config laden</button></div>
+<!-- 				<div class="ui-block-b"><button type="submit" data-theme="a" data-icon="" onclick="readFile('Trials/trialConfig.txt')">Config laden</button></div> -->
 			</fieldset>
 		</div><!-- /footer -->
 	</div>
@@ -407,7 +407,11 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content" align="center" >
+			<a href="#" data-role="button"  data-iconpos="top"  onclick="pushDataToServer()">Letzten Versuch auf Server laden</a>
+			<br/>
 			<a href="#" data-role="button"  data-iconpos="top"  onclick="closeDataCollection()">Neuen Versuch aufnehmen</a>
+			<br/>
+			<br/>
 			<br/>
 			<a href="#" data-role="button"  data-iconpos="top"  onclick="exitFromApp()">Data Collector schliessen</a>
 			<br/>
