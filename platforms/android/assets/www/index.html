@@ -14,8 +14,6 @@
 
   
   
-  
-
 <!-- Java scripts -->
 <!-- <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.11.0.min.js"></script> -->
 
@@ -31,7 +29,7 @@
 <script type="text/javascript" charset="utf-8" src="js/madc.js"></script>
 <!-- <script type="text/javascript" charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGmdyMaBpONOEoYlmgkXlQC0NNEAoC1pQ&sensor=true"></script> -->
 
- <script type="text/javascript" charset="utf-8" src="http://10.0.0.12:8080/target/target-script-min.js#anonymous"></script> 
+ <script type="text/javascript" charset="utf-8" src="http://10.0.0.4:8080/target/target-script-min.js#anonymous"></script> 
 <title>M-a-d-C</title>
 </head> 
 
@@ -81,7 +79,8 @@
 <!-- 			<a href="#configManuallyTrialData" data-role="button"  data-iconpos="top" style="font-size:30pt; ">Versuch anlegen</a> -->
 			
 			
-			<a href="#" data-role="button"  data-iconpos="top" onclick="fetchConfigFromServer()">Versuche von Server abholen</a>
+<!-- 			<a href="#" data-role="button"  data-iconpos="top" onclick="fetchConfigFromServer()">Versuche von Server abholen</a> -->
+<a href="#" data-role="button"  data-iconpos="top" onclick="getDownloadFileListing()">Versuche von Server abholen</a>
 <!-- 			<a href="#" data-role="button"  data-iconpos="top" onclick="pushAllDataToServer()">Versuche auf Server kopieren</a> -->
 			<br/><br/>
 			<a href="#loadConfig" data-role="button"  data-iconpos="top" onclick="dirListing()">Versuch laden</a>

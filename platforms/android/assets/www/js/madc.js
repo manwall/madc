@@ -32,8 +32,9 @@ var actualFileCounter = 0;
 var trialFolder="Trials";
 var tmpTrialPath = "/Trials/tmp/";
 var devicePath = "/storage/emulated/0/";
-var serverPath ="http://10.0.0.12:8090/FileUpDownload/fileuploadservlet";
-
+var serverPath ="http://10.0.0.4:8090/FileUpDownload/fileuploadservlet";
+var serverPathDownload ="http://10.0.0.4:8090/FileUpDownload/filedownloadservlet";
+var serverPathDownloadFileListing ="http://10.0.0.4:8090/FileUpDownload/filedownloadservletfilelisting";
 
 
 function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Tdate,Tconfig,Tdata,Tstatus){
@@ -1466,10 +1467,10 @@ function addImage(){
     
     
     
-    function fetchConfigFromServer(){
+    function fetchConfigFromServer(actualFile){
     	var fileTransfer = new FileTransfer();
-    	var uri = encodeURI("http://10.0.0.12:8090/FileUpDownload/filedownloadservlet");
-    	var filePath = devicePath + "/"+trialFolder+"/testDownload.txt";
+    	var uri = encodeURI(serverPathDownload);
+    	var filePath = devicePath +trialFolder+"/"+actualFile;
 
     	fileTransfer.download(uri,filePath,
     			function(entry) {
@@ -1542,6 +1543,30 @@ function addImage(){
          allOK = false;
      }
      
+     
+     function getDownloadFileListing(){
+    	 var files = {};
+    	 
+    	 $.get( serverPathDownloadFileListing, function( data ) {
+    		 console.log("JSON data:  " + data)
+    		  //alert( "Data Loaded: " + data );
+    		 var filelist = data.toString();
+    		 files = filelist.split(",");
+    		 console.log("Files from server lenght: " + files.length);
+    		 
+    		 for(i=0;i<files.length;i++){
+        		 console.log("Actual file to fetch: "+files[i]);
+        		 fetchConfigFromServer(files[i]);
+    		 }
+    		});
+    	 
+    	 
+    
+    		 
+    	 
+    	 
+    	 
+     }
 
     	
     
