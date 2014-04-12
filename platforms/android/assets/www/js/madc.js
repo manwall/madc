@@ -29,12 +29,14 @@ var pictureSource;   // picture source
 var destinationType; // sets the format of returned value
 var actualEntries = null;
 var actualFileCounter = 0;
+var securityToken = "yD5WVwEhdsodaPWi2oWWonwkwCTbvsZSiclcNgOdPtV2pj2A79";
 var trialFolder="Trials";
 var tmpTrialPath = "/Trials/tmp/";
 var devicePath = "/storage/emulated/0/";
-var serverPath ="http://10.0.0.4:8090/FileUpDownload/fileuploadservlet";
-var serverPathDownload ="http://10.0.0.4:8090/FileUpDownload/filedownloadservlet";
-var serverPathDownloadFileListing ="http://10.0.0.4:8090/FileUpDownload/filedownloadservletfilelisting";
+var serverPath ="http://10.0.0.11:8090/FileUpDownload/fileuploadservlet?security="+securityToken;
+var serverPathDownload ="http://10.0.0.11:8090/FileUpDownload/filedownloadservlet?security="+securityToken+"&file=";
+var serverPathDownloadFileListing ="http://10.0.0.11:8090/FileUpDownload/filedownloadservletfilelisting?security="+securityToken;
+
 
 
 function Trial(Tid, Tlocation,TstudyDirector,Tinvestigator,TprotocolId,Ttitle,Tdate,Tconfig,Tdata,Tstatus){
@@ -1469,7 +1471,11 @@ function addImage(){
     
     function fetchConfigFromServer(actualFile){
     	var fileTransfer = new FileTransfer();
-    	var uri = encodeURI(serverPathDownload);
+    	var uri = encodeURI(serverPathDownload + actualFile);
+    	
+    	console.log("URI: " + uri);
+    	
+    	
     	var filePath = devicePath +trialFolder+"/"+actualFile;
 
     	fileTransfer.download(uri,filePath,
@@ -1484,7 +1490,7 @@ function addImage(){
     	        console.log("download error target " + error.target);
     	        console.log("upload error code" + error.code);
     	    },
-    	    false,
+    	    true,
     	    {
     	        headers: {
     	            "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
@@ -1560,6 +1566,7 @@ function addImage(){
     		 }
     		});
     	 
+    	 alert( "Versuche geladen!" );
     	 
     
     		 
