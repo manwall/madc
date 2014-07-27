@@ -33,9 +33,10 @@ var securityToken = "yD5WVwEhdsodaPWi2oWWonwkwCTbvsZSiclcNgOdPtV2pj2A79";
 var trialFolder="Trials";
 var tmpTrialPath = "/Trials/tmp/";
 var devicePath = "/storage/emulated/0/";
-var serverPath ="http://10.0.0.11:8090/FileUpDownload/fileuploadservlet?security="+securityToken;
-var serverPathDownload ="http://10.0.0.11:8090/FileUpDownload/filedownloadservlet?security="+securityToken+"&file=";
-var serverPathDownloadFileListing ="http://10.0.0.11:8090/FileUpDownload/filedownloadservletfilelisting?security="+securityToken;
+//var devicePath = "/mnt/sdcard/";
+var serverPath ="http://cloud.c3lab.tk.jku.at/FileUpDownload/fileuploadservlet?security="+securityToken;
+var serverPathDownload ="http://cloud.c3lab.tk.jku.at/FileUpDownload/filedownloadservlet?security="+securityToken+"&file=";
+var serverPathDownloadFileListing ="http://cloud.c3lab.tk.jku.at/FileUpDownload/filedownloadservletfilelisting?security="+securityToken;
 
 
 
