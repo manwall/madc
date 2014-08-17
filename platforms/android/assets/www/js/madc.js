@@ -33,7 +33,7 @@ var securityToken = "yD5WVwEhdsodaPWi2oWWonwkwCTbvsZSiclcNgOdPtV2pj2A79";
 var trialFolder="Trials";
 var tmpTrialPath = "/Trials/tmp/";
 var devicePath = "/storage/emulated/0/";
-//var devicePath = "/mnt/sdcard/";
+//var devicePath = "/storage/sdcard0/";
 var serverPath ="http://cloud.c3lab.tk.jku.at/FileUpDownload/fileuploadservlet?security="+securityToken;
 var serverPathDownload ="http://cloud.c3lab.tk.jku.at/FileUpDownload/filedownloadservlet?security="+securityToken+"&file=";
 var serverPathDownloadFileListing ="http://cloud.c3lab.tk.jku.at/FileUpDownload/filedownloadservletfilelisting?security="+securityToken;
@@ -248,20 +248,20 @@ function addFields(){
         container.appendChild(document.createElement("br"));
 
     	//Anzahl/Plot block
-    	var diva = document.createElement("div");
-    	diva.className = "ui-block-a";
-    	diva.id = "diva";
-    	var divb = document.createElement("div");
-    	divb.className = "ui-block-b";
-    	divb.id = "divb"
-    	diva.appendChild(document.createTextNode("Anzahl/Plot "));
-    	container.appendChild(diva);
-        var input = document.createElement("input");
-        input.type = "number";
-        input.id = "count"+ (i+1);
-        divb.appendChild(input);
-        container.appendChild(divb);
-        container.appendChild(document.createElement("br"));
+//    	var diva = document.createElement("div");
+//    	diva.className = "ui-block-a";
+//    	diva.id = "diva";
+//    	var divb = document.createElement("div");
+//    	divb.className = "ui-block-b";
+//    	divb.id = "divb"
+//    	diva.appendChild(document.createTextNode("Anzahl/Plot "));
+//    	container.appendChild(diva);
+//        var input = document.createElement("input");
+//        input.type = "number";
+//        input.id = "count"+ (i+1);
+//        divb.appendChild(input);
+//        container.appendChild(divb);
+//        container.appendChild(document.createElement("br"));
 
         
 //        container.appendChild(document.createTextNode("Einheit "));
@@ -397,7 +397,8 @@ function createTrialConfig(){
 		console.log("Actual type: " + actualType);
 		var actualScale = $('#scale'+(j+1), form).val();
 		console.log("Actual scale: " + actualScale);
-		var actualCount = $('#count'+(j+1), form).val();
+//		var actualCount = $('#count'+(j+1), form).val();
+		var actualCount = $('#trialCountSubsamplesPerPlot', form).val();
 		console.log("Actual count: " + actualCount);
 		var actualTrialConfigAttribute = new TrialConfigAttribute(actualType, actualScale, actualCount)
 		trialAttributes.push(actualTrialConfigAttribute);
@@ -506,11 +507,11 @@ function writeFile() {
 	console.log("writeFile() entered");
 	 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
 	 function gotFS(fileSystem) {
-//		 console.log("path before: "+fileSystem.root.fullPath);
+		 console.log("path before: "+fileSystem.root.fullPath);
 		 
 		 fileSystem.root.fullPath=tmpTrialPath;
 		 
-//		 console.log("path after: "+fileSystem.root.fullPath);
+		 console.log("path after: "+fileSystem.root.fullPath);
 	        fileSystem.root.getFile("trialConfig.txt", {create: true, exclusive: false}, gotFileEntry, fail);
 	    }
 
@@ -619,35 +620,71 @@ function createTrialDataHorizontal(){
 	trialData = new TrialData(date, trialDatasets);
 	
 	//rows
+//	for (r=0;r<trial.Tconfig.TCrows;r++){
+//		if(r%2==0){
+//		//columns
+//		for(c=0;c<trial.Tconfig.TCcolumns;c++){
+//			//Trial config attributes length
+//			for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+//				//Trial config attribute[a] count
+//				for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+//					console.log((r+1)+"0"+(c+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
+//					trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
+//					}
+//				}
+//			}
+//		}
+//		else
+//		{
+//			//columns
+//			for(c=trial.Tconfig.TCcolumns-1;c>=0;c--){				
+//				//Trial config attributes length
+//				for(a=0;a<trial.Tconfig.TCattributes.length;a++){					
+//					//Trial config attribute[a] count
+//					for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){						
+//						console.log((r+1)+"0"+(c+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
+//						trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
+//						}
+//					}
+//				}
+//			}
+//		}
+	
 	for (r=0;r<trial.Tconfig.TCrows;r++){
-		if(r%2==0){
-		//columns
-		for(c=0;c<trial.Tconfig.TCcolumns;c++){
-			//Trial config attributes length
+	if(r%2==0){
+	//columns
+	for(c=0;c<trial.Tconfig.TCcolumns;c++){
+		for(b=0;b<trial.Tconfig.TCattributes[0].TCAcount;b++){
+		//Trial config attributes length
+		//for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+			//Trial config attribute[a] count
+			//for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
 			for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+				console.log((r+1)+"0"+(c+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
+				trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
+				
+			}
+			}
+		}
+	}
+	else
+	{
+		//columns
+		for(c=trial.Tconfig.TCcolumns-1;c>=0;c--){				
+			//Trial config attributes length
+			//for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+			for(b=0;b<trial.Tconfig.TCattributes[0].TCAcount;b++){
 				//Trial config attribute[a] count
-				for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+				//for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+				for(a=0;a<trial.Tconfig.TCattributes.length;a++){
 					console.log((r+1)+"0"+(c+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
 					trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
 					}
 				}
 			}
 		}
-		else
-		{
-			//columns
-			for(c=trial.Tconfig.TCcolumns-1;c>=0;c--){				
-				//Trial config attributes length
-				for(a=0;a<trial.Tconfig.TCattributes.length;a++){					
-					//Trial config attribute[a] count
-					for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){						
-						console.log((r+1)+"0"+(c+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
-						trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
-						}
-					}
-				}
-			}
-		}
+	}
+	
 	trial.setTrialData(trialData);
 	console.log("TrialData"+trialData);
 	console.log("TrialData dataset length:"+trialData.TDdatasets.length);
@@ -667,9 +704,11 @@ function createTrialDataVertical(){
 		//columns
 		for(c=0;c<trial.Tconfig.TCrows;c++){
 			//Trial config attributes length
-			for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+			//for(a=0;a<trial.Tconfig.TCattributes.length;a++){
+			for(b=0;b<trial.Tconfig.TCattributes[0].TCAcount;b++){
 				//Trial config attribute[a] count
-				for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+				//for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+				for(a=0;a<trial.Tconfig.TCattributes.length;a++){
 					console.log((c+1)+"0"+(r+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
 					trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
 					}
@@ -681,9 +720,11 @@ function createTrialDataVertical(){
 			//columns
 			for(c=trial.Tconfig.TCrows-1;c>=0;c--){				
 				//Trial config attributes length
-				for(a=0;a<trial.Tconfig.TCattributes.length;a++){					
+				//for(a=0;a<trial.Tconfig.TCattributes.length;a++){		
+				for(b=0;b<trial.Tconfig.TCattributes[0].TCAcount;b++){
 					//Trial config attribute[a] count
-					for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){						
+					//for(b=0;b<trial.Tconfig.TCattributes[a].TCAcount;b++){
+					for(a=0;a<trial.Tconfig.TCattributes.length;a++){	
 						console.log((c+1)+"0"+(r+1)+" -- "+trial.Tconfig.TCattributes[a].TCAtype);
 						trialDatasets.push(new TrialDataSet(((r+1)+"0"+(c+1)), trial.Tconfig.TCattributes[a].TCAtype,trial.Tconfig.TCattributes[a].TCAunit, 0, null, null));
 						}

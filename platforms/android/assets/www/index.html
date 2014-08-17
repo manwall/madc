@@ -80,7 +80,7 @@
 			
 			
 <!-- 			<a href="#" data-role="button"  data-iconpos="top" onclick="fetchConfigFromServer()">Versuche von Server abholen</a> -->
-<a href="#" data-role="button"  data-iconpos="top" onclick="getDownloadFileListing()">Versuche von Server abholen</a>
+			<a href="#" data-role="button"  data-iconpos="top" onclick="getDownloadFileListing()">Versuche von Server abholen</a>
 <!-- 			<a href="#" data-role="button"  data-iconpos="top" onclick="pushAllDataToServer()">Versuche auf Server kopieren</a> -->
 			<br/><br/>
 			<a href="#loadConfig" data-role="button"  data-iconpos="top" onclick="dirListing()">Versuch laden</a>
@@ -196,6 +196,7 @@
 					<b>Anzahl Spalten:</b>
 					<input type="number" id="trialColumns" value="1"/>
 					
+					
 					<label for="config"><b>Anzahl der Attribute:</b></label>
 					<input type="number" id="attributes" name="attributes" value="0" onchange="addFields()"/>
 					<br/>
@@ -205,6 +206,9 @@
     					<fieldset class="ui-grid-a" id="containerFieldset">
     					</fieldset>
     				</div>	
+    				
+    				<b>Anzahl Subsamples/Plot:</b>
+					<input type="number" id="trialCountSubsamplesPerPlot" value="1"/>
 					
 					
 					
